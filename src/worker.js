@@ -55,11 +55,11 @@ const workerMessageUpsert = new Worker('webhookQueue', async (job) => {
         "server_url": body.server_url,
         "apikey": body.apikey,
     };
-    enviarParaODataCrazy("workerMessageUpsert: ", dataSend)
+    enviarParaODataCrazy(dataSend)
 }, {
     connection,
     concurrency: 3,
-})
+});
 
 const workerContactsUpdate = new Worker('webhookQueueContactsUpdate', async (job) => {
     const body = job.data;
@@ -78,11 +78,11 @@ const workerContactsUpdate = new Worker('webhookQueueContactsUpdate', async (job
         "server_url": body.server_url,
         "apikey": body.apikey
     };
-    enviarParaODataCrazy("workerContactsUpdate: ", dataSend)
+    enviarParaODataCrazy(dataSend)
 }, {
     connection,
     concurrency: 3,
-})
+});
 
 const workerMessagesUpdate = new Worker('webhookQueueMessageUpdate', async (job) => {
     const body = job.data;
@@ -104,8 +104,31 @@ const workerMessagesUpdate = new Worker('webhookQueueMessageUpdate', async (job)
         "server_url": body.server_url,
         "apikey": body.apikey
     };
-    enviarParaODataCrazy("workerMessagesUpdate: ", dataSend)
+    enviarParaODataCrazy(dataSend)
 }, {
     connection,
     concurrency: 3,
-})
+});
+
+const workerContactsUpsert = new Worker('webhookQueueContactsUpsert', async (job) => {
+    const body = job.data;
+    const dataSend = {
+        "event": body.event,
+        "instance": body.instance,
+        "data": {
+            "remoteJid": body.data?.remoteJid,
+            "pushName": body.data?.pushName,
+            "profilePicUrl": body.data?.profilePicUrl,
+            "instanceId": body.data?.instanceId
+        },
+        "destination": body.destination,
+        "date_time": body.date_time,
+        "sender": body.sender,
+        "server_url": body.server_url,
+        "apikey": body.apikey
+    };
+    enviarParaODataCrazy(dataSend);
+}, {
+    connection, 
+    concurrency: 3,
+});
